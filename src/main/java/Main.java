@@ -18,11 +18,11 @@ public class Main {
 
     private static void search(String query) {
         final String BASE_URL = "https://sis.jhu.edu/api/classes?key=";
-        final String ADVANCED_URL = "&School=Whiting%20School%20of%20Engineering&Department=EN%20Computer%20Science&CourseTitle=";
+        final String ADVANCED = "&School=Whiting%20School%20of%20Engineering&Department=EN%20Computer%20Science&CourseTitle={query}";
         final String KEY = System.getenv("JHU_API_KEY");
 
-        String endpoint = BASE_URL + KEY + ADVANCED_URL + query;
-        HttpResponse<JsonNode> jsonResponse = Unirest.get(endpoint).asJson();
+        String endpoint = BASE_URL + KEY + ADVANCED;
+        HttpResponse<JsonNode> jsonResponse = Unirest.get(endpoint).routeParam("query", query).asJson();
         System.out.println(jsonResponse.getBody().toString());
     }
 }
