@@ -1,9 +1,22 @@
+import kong.unirest.GenericType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    public class Course {
+        String Title;
+        String OfferingName;
+
+        @Override
+        public String toString() {
+            return OfferingName + " " + Title + "\n";
+        }
+    }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
@@ -22,7 +35,9 @@ public class Main {
         final String KEY = System.getenv("JHU_API_KEY");
 
         String endpoint = BASE_URL + KEY + ADVANCED;
-        HttpResponse<JsonNode> jsonResponse = Unirest.get(endpoint).routeParam("query", query).asJson();
-        System.out.println(jsonResponse.getBody().toString());
+
+        List<Course> courses = Unirest.get(endpoint).routeParam("query", query).asObject(new GenericType<List<Course>>(){}).getBody();
+
+        System.out.println(courses);
     }
 }
