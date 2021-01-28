@@ -27,18 +27,25 @@ public class Main {
     }
 
     private static void search(String query) {
-        final String BASE_URL = "https://sis.jhu.edu/api/classes?key=";
-        final String ADVANCED = "&School=Whiting%20School%20of%20Engineering&Department=EN%20Computer%20Science&Term=Spring%202021&CourseTitle={query}";
-        final String KEY = System.getenv("JHU_API_KEY");
 
-        String endpoint = BASE_URL + KEY + ADVANCED;
+        if (query.matches("[A-Za-z0-9]+")) {
 
-        HashSet<Course> courses = Unirest.get(endpoint).routeParam("query", query).asObject(new GenericType<HashSet<Course>>(){}).getBody();
+            final String BASE_URL = "https://sis.jhu.edu/api/classes?key=";
+            final String ADVANCED = "&School=Whiting%20School%20of%20Engineering&Department=EN%20Computer%20Science&Term=Spring%202021&CourseTitle={query}";
+            final String KEY = System.getenv("JHU_API_KEY");
 
-        if (courses.size() == 0) {
-            System.out.println("No course title contains the entered search query!");
+            String endpoint = BASE_URL + KEY + ADVANCED;
+
+            HashSet<Course> courses = Unirest.get(endpoint).routeParam("query", query).asObject(new GenericType<HashSet<Course>>() {
+            }).getBody();
+
+            if (courses.size() == 0) {
+                System.out.println("No course title contains the entered search query!");
+            } else {
+                OutputSet(courses);
+            }
         } else {
-            OutputSet(courses);
+            System.out.println("Please enter a valid query (no special characters)");
         }
     }
 
@@ -47,6 +54,4 @@ public class Main {
             System.out.println(c.toString());
         }
     }
-
-
 }
