@@ -7,6 +7,11 @@ public class Main {
     public class Course {
         String Title;
         String OfferingName;
+
+        @Override
+        public String toString() {
+            return OfferingName + " " + Title;
+        }
     }
 
     public static void main(String[] args) {
@@ -28,20 +33,20 @@ public class Main {
 
         String endpoint = BASE_URL + KEY + ADVANCED;
 
-        List<Course> coursesList = Unirest.get(endpoint).routeParam("query", query).asObject(new GenericType<List<Course>>(){}).getBody();
-
-        HashMap<String, String> courses = new HashMap<>();
-
-        for (Course course : coursesList) {
-            courses.put(course.OfferingName, course.Title);
-        }
+        HashSet<Course> courses = Unirest.get(endpoint).routeParam("query", query).asObject(new GenericType<HashSet<Course>>(){}).getBody();
 
         if (courses.size() == 0) {
             System.out.println("No course title contains the entered search query!");
         } else {
-            for (Map.Entry i : courses.entrySet()) {
-                System.out.println(i.getKey() + " " + i.getValue());
-            }
+            OutputSet(courses);
         }
     }
+
+    private static void OutputSet(HashSet<Course> courses) {
+        for (Course c : courses) {
+            System.out.println(c.toString());
+        }
+    }
+
+
 }
